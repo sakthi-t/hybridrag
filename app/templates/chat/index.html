@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}Chat - RAG Threads{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-small">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M19 3H5C3.89 3 3 3.89 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.89 20.1 3 19 3ZM17 17H7V15H17V17ZM17 13H7V11H17V13ZM17 9H7V7H17V9Z"
+                        fill="currentColor" />
+                </svg>
+                <span>RAG Threads</span>
+            </div>
+            <button class="btn-icon" id="newChatBtn" title="New Chat">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="thread-list" id="threadList">
+                <!-- Threads will be loaded here -->
+                <div class="empty-state">
+                    <p>No conversations yet</p>
+                    <p class="hint">Upload a document to start</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="chat-header">
+            <button class="btn-icon sidebar-toggle" id="sidebarToggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="header-title">
+                <h1 id="chatTitle">Select a document to start</h1>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-upload" id="uploadBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                        </path>
+                    </svg>
+                    <span>Upload</span>
+                </button>
+
+                <div class="profile-dropdown" id="profileDropdown">
+                    <button class="profile-btn" id="profileBtn">
+                        <span class="avatar">{{ user.email[0]|upper }}</span>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <div class="dropdown-header">
+                            <span class="email">{{ user.email }}</span>
+                        </div>
+                        {% if user.is_admin %}
+                        <a href="/admin" class="dropdown-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path
+                                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                                </path>
+                            </svg>
+                            Admin Panel
+                        </a>
+                        {% endif %}
+                        <a href="/activity" class="dropdown-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                            Activity Log
+                        </a>
+                        <button class="dropdown-item" id="logoutBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <div class="welcome-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path
+                            d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                        </path>
+                    </svg>
+                </div>
+                <h2>Welcome to RAG Threads</h2>
+                <p>Upload a PDF document to start chatting</p>
+                <button class="btn btn-primary" id="welcomeUploadBtn">
+                    Upload Document
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+            <form class="chat-input-form" id="chatForm">
+                <div class="input-wrapper">
+                    <textarea id="messageInput" placeholder="Ask a question about your document..." rows="1"
+                        disabled></textarea>
+                    <button type="submit" class="btn-send" id="sendBtn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <p class="input-hint">Text-only analysis • Citations include page numbers</p>
+            </form>
+        </div>
+        <div class="metrics-panel" id="metricsPanel" hidden>
+            <div class="metrics-header">
+                <span>Retrieval Metrics</span>
+                <button class="btn-icon" id="metricsCloseBtn" title="Hide">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-label">Text Chunks</span>
+                    <span class="metric-value" id="metricTextChunks">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Images</span>
+                    <span class="metric-value" id="metricImages">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Faithfulness</span>
+                    <span class="metric-value" id="metricFaithfulness">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Citation Precision</span>
+                    <span class="metric-value" id="metricCitationPrecision">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Groundedness</span>
+                    <span class="metric-value" id="metricGroundedness">0</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal" id="uploadModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Upload Document</h3>
+            <button class="btn-icon modal-close" id="closeUploadModal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            {% if user.is_admin %}
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="scopeSelect">Document Scope</label>
+                <select id="scopeSelect"
+                    style="width: 100%; padding: 0.5rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);">
+                    <option value="USER_PRIVATE">Private (Only you)</option>
+                    <option value="GLOBAL">Global (All users can access)</option>
+                    <option value="ADMIN_ONLY">Admin Only</option>
+                </select>
+            </div>
+            {% endif %}
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                </div>
+                <p>Drag & drop your PDF here</p>
+                <p class="hint">or click to browse</p>
+                <input type="file" id="fileInput" accept=".pdf" hidden>
+            </div>
+
+            <div class="upload-progress" id="uploadProgress" style="display: none;">
+                <div class="file-info">
+                    <span class="filename" id="uploadFilename"></span>
+                    <span class="status" id="uploadStatus">Uploading...</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Chat Modal -->
+<div class="modal" id="newChatModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>New Chat</h3>
+            <button class="btn-icon modal-close" id="closeNewChatModal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Select a document to start a new conversation:</p>
+            <div class="document-list" id="documentList">
+                <!-- Documents will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Activity Log - RAG Threads{% endblock %}
+
+{% block content %}
+<div class="activity-container">
+    <header class="admin-header">
+        <div class="header-left">
+            <a href="/chat" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Chat
+            </a>
+            <h1>Activity Log</h1>
+        </div>
+        <div class="header-right">
+            <span class="admin-badge">{{ user.email }}</span>
+        </div>
+    </header>
+
+    <div class="admin-content">
+        <div class="tab-panel active" id="userDocsPanel">
+            <div class="panel-header">
+                <h2>Your Documents</h2>
+                <button class="btn btn-secondary" id="refreshUserDocs">Refresh</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Scope</th>
+                            <th>Size</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userDocsTableBody">
+                        <!-- Documents will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-panel active" id="userActivityPanel" style="margin-top: 2rem;">
+            <div class="panel-header">
+                <h2>Your Activity</h2>
+                <button class="btn btn-secondary" id="refreshUserActivity">Refresh</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Action</th>
+                            <th>Resource</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userActivityTableBody">
+                        <!-- Activity logs will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

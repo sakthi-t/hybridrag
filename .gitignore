@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Flask
+instance/
+.webassets-cache
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Migrations (will be generated)
+# migrations/versions/*.py
+# !migrations/versions/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# MD files (except README)
+*.md
+!README.md
+
+# CommandCode
+.commandcode/
+
+# Legacy env
+.env.old
+
+# Nested git repos
+backend/.git/
+frontend/.git/
