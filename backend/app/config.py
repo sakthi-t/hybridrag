@@ -85,6 +85,8 @@ class Settings(BaseSettings):
     langchain_project: str = "hybridrag"
     langchain_endpoint: str = "https://api.smith.langchain.com"
 
+    allow_origins: str = "http://localhost:5173,http://localhost:5174,http://localhost:5175"
+
     neo4j_uri: str = ""
     neo4j_user: str = ""
     neo4j_password: str = ""
