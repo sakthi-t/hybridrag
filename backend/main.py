@@ -22,7 +22,13 @@ app = FastAPI(
 )
 
 settings = get_settings()
-origins = [o.strip() for o in settings.allow_origins.split(",") if o.strip()]
+_configured = [o.strip() for o in settings.allow_origins.split(",") if o.strip()]
+origins = list(set(_configured + [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
+    "https://hybridragreact-production.up.railway.app",
+]))
 
 app.add_middleware(
     CORSMiddleware,
